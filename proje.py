@@ -237,7 +237,7 @@ def KNN_Best_Params(x_train,x_test,y_train_y_test):
     grid = GridSearchCV(knn, param_grid, cv = 10,scoring = "accuracy")
     grid.fit(x_train,y_train)
     
-    print("Best training score: {} with parameters: {}".format(grid.best_score_,grid.))  #unutmaaşsjdasd
+    print("Best training score: {} with parameters: {}".format(grid.best_score_,grid.))  #unutmaa burayı tekrar izle
     print()
     
     knn = KNeighborsClassifier(**grid.best_params_)
