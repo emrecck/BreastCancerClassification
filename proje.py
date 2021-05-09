@@ -226,36 +226,92 @@ print("Basic KNN Acc: ",acc)
 #%% KNN Tune (En iyi parametre bulma)
 
 
-def KNN_Best_Params(x_train,x_test,y_train_y_test):
+def KNN_Best_Params(x_train,x_test,y_train,y_test):
     
+    # 30 tane k değeri için en uygun k değerini bulmaya çalışır
     k_range = list(range(1,31))
+    # uniform ve distance için en uygunu bulmamız gerekir
     weight_options = ["uniform","distance"]
     print()
+    # grid search yapmak için gerekli olan parametleri dictionary e atarız
     param_grid = dict(n_neighbors = k_range,weights = weight_options)
-    
+    # hiçbir parametreye dokunmadan knn sınıflandırıcısını kullancağız
     knn = KNeighborsClassifier()
+    
+    # machine learning modeli olarak grid search yaparken knn ni kullan,parametre olarak param_gird dictionarysini kullan,cross validation 10 kere yapıcak
+    # score olarak da accuracy yi kabul edicek 
     grid = GridSearchCV(knn, param_grid, cv = 10,scoring = "accuracy")
+    # fit etmek için train verisini kullanacağız
     grid.fit(x_train,y_train)
     
-    print("Best training score: {} with parameters: {}".format(grid.best_score_,grid.))  #unutmaaşsjdasd
+    # gird best score u ve best paramsı yazdır
+    print("Best training score: {} with parameters: {}".format(grid.best_score_,grid.best_params_))
     print()
     
+    # belirlenen best params lara göre knn modeli fit edilir 
     knn = KNeighborsClassifier(**grid.best_params_)
     knn.fit(x_train,y_train)
-
+    
+    # overfitting underftting oluğ olmadığını anlamak için x_train ve x_test verisi için prediction yapıyoruz
     y_pred_test = knn.predict(x_test)
     y_pred_train = knn.predict(x_train)
     
+    # confusion matrislerine bakıyoruz
     cm_test = confusion_matrix(y_test, y_pred_test)
-    cm_train = confusion_matrix(y_train, y_pred_test)
-
+    cm_train = confusion_matrix(y_train, y_pred_train)
+    
+    # accuracy scorelarına bakıyoruz
     acc_test = accuracy_score(y_test, y_pred_test)
     acc_train = accuracy_score(y_train, y_pred_train)
+     
     print("Test score: {}, Train Score: {}".format(acc_test,acc_train))
     print()
     print("CM Test: ",cm_test)
     print("CM Train: ",cm_train)
 
+    return grid
+
+
+grid = KNN_Best_Params(X_train, X_test, Y_train, Y_test)
+
+
+# train score test score dan yüksekse ezberleme overfitting söz konusudur
+
+# high variance overfitting
+
+# high bias underfitting
+
+# regularization çözüm olabilir
+# cross validation yapılabilr
+# model complexity yi düşürülebilir. variance azalır .
+
+
+print("what was acc? ",acc)
+
+y_pred = knn.predict(X_train)
+acc = accuracy_score(Y_train, y_pred)
+
+print("Now acc?",acc)
+
+
+
+#%% PCA (Principal Component Analysis)
+
+"""
+mümkün olduuğu kadar veri tutar dimension feature sayısı sample sayısı 
+veri boyutunu azaltabiliriz
+correlation matrisi varsa ne işe yaradığını bilmediğimiz featureları kaldırabiliriz
+görselleştirme için de kullanılır
+eigen vector ve eigen value ları bulmaya yarar
+x eksenindeki mean ortalamasını buluruz
+y ekseninde mean ortalamasını buluruz
+x - meanx = x
+y - meany = y
+covaryansını buluruz = 
+EIGEN VECTOR BOYUT SAYISI
+EIGEN VALUE MAGNİTUDE 
+
+"""
 
 
 
